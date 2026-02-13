@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Flex, Input, Spinner } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { BASE_URL } from "../App";
@@ -43,23 +42,18 @@ const TodoForm = () => {
 
 	return (
 		<form onSubmit={createTodo}>
-			<Flex gap={2}>
+			<div>
 				<Input
 					type='text'
 					value={newTodo}
 					onChange={(e) => setNewTodo(e.target.value)}
-					ref={(input) => input && input.focus()}
 				/>
-				<Button
-					mx={2}
+				<button
 					type='submit'
-					_active={{
-						transform: "scale(.97)",
-					}}
 				>
-					{isCreating ? <Spinner size={"xs"} /> : <span>Create</span> />}
-				</Button>
-			</Flex>
+					創建
+				</button>
+			</div>
 		</form>
 	);
 };
