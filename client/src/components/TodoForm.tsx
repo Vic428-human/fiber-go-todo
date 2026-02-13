@@ -1,60 +1,51 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { useState } from "react";
-import { BASE_URL } from "../App";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 const TodoForm = () => {
-	const [newTodo, setNewTodo] = useState("");
+    const [newTodo, setNewTodo] = useState("");
+    const queryClient = useQueryClient();
 
-	const queryClient = useQueryClient();
+    const { mutate: createTodo, isPending: isCreating } = useMutation({
+        mutationKey: ["createTodo"],
+        mutationFn: async (todoBody: string) => {  // 只接收字串
+            const res = await fetch('http://localhost:5000/api' + `/todos`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ body: todoBody }),
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.error || "Something went wrong");
+            }
+            return data;
+        },
+        onSuccess: () => {
+            setNewTodo("");  // 清空狀態移到這裡
+            queryClient.invalidateQueries({ queryKey: ["todos"] });
+        },
+        onError: (error: any) => {
+            alert(error.message);
+        },
+    });
 
-	const { mutate: createTodo, isPending: isCreating } = useMutation({
-		mutationKey: ["createTodo"],
-		mutationFn: async (e: React.FormEvent) => {
-			e.preventDefault();
-			try {
-				const res = await fetch(BASE_URL + `/todos`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ body: newTodo }),
-				});
-				const data = await res.json();
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        createTodo(newTodo);  // 只傳資料
+    };
 
-				if (!res.ok) {
-					throw new Error(data.error || "Something went wrong");
-				}
-
-				setNewTodo("");
-				return data;
-			} catch (error: any) {
-				throw new Error(error);
-			}
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["todos"] });
-		},
-		onError: (error: any) => {
-			alert(error.message);
-		},
-	});
-
-	return (
-		<form onSubmit={createTodo}>
-			<div>
-				<Input
-					type='text'
-					value={newTodo}
-					onChange={(e) => setNewTodo(e.target.value)}
-				/>
-				<button
-					type='submit'
-				>
-					創建
-				</button>
-			</div>
-		</form>
-	);
+    return (
+        <form onSubmit={handleSubmit}>
+            <input
+                type="text"
+                value={newTodo}
+                onChange={(e) => setNewTodo(e.target.value)}
+                placeholder="新增 Todo"
+                disabled={isCreating}
+            />
+            <button type="submit" disabled={isCreating}>
+                {isCreating ? "新增中..." : "新增"}
+            </button>
+        </form>
+    );
 };
-export default TodoForm;
+export default TodoForm;  // 這行絕對不能少！

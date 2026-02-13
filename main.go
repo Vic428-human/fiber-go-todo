@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -57,10 +58,10 @@ func main() {
 	// 1. 確定是否有new
 	app := fiber.New()
 
-	// app.Use(cors.New(cors.Config{
-	// 	AllowOrigins: "http://localhost:5173",
-	// 	AllowHeaders: "Origin,Content-Type,Accept",
-	// }))
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:5174",
+		AllowHeaders: "Origin,Content-Type,Accept",
+	}))
 
 	// 2. 路由是否有建立
 	app.Get("/api/todos", getTodos)
