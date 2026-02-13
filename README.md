@@ -1,0 +1,4 @@
+> 目標是先在這個專案理解怎麼把 React 接上後端 server，成功的話 [go-pizza-order-tracker](https://github.com/Vic428-human/go-pizza-order-tracker) 將這個原先用 template 製作的go專案，也添加 React，然後試接，如果成功，就逐步把原先go template的代碼，都換成 react。
+
+> 主要動機是因為，go-pizza-order-tracker 我想讓這個專案裡的SSE概念，可以活用在 [social-media-marketplace](https://github.com/Vic428-human/social-media-marketplace) 這個交易所專案，但目前版本1的交易所不會直接放go做為後端，如果要實驗的話，需要另外開一個repo。[social-media-marketplace-react-only-template
+](https://github.com/Vic428-human/social-media-marketplace-react-only-template) 可從 social-media-marketplace-react-only-template 這個專案另外clone一份作實驗，反正就是不要直接修改到 social-media-marketplace 版本1的就對了
