@@ -50,9 +50,11 @@ func main() {
 
 	fmt.Println("Connected to MONGODB ATLAS")
 
+	// 3. 確認DB連線
 	// 在mongodb admin > cluster0 > db > golang_db > collection > todos
 	collection = client.Database("golang_db").Collection("todos")
 
+	// 1. 確定是否有new
 	app := fiber.New()
 
 	// app.Use(cors.New(cors.Config{
@@ -60,6 +62,7 @@ func main() {
 	// 	AllowHeaders: "Origin,Content-Type,Accept",
 	// }))
 
+	// 2. 路由是否有建立
 	app.Get("/api/todos", getTodos)
 	app.Post("/api/todos", createTodo)
 	app.Patch("/api/todos/:id", updateTodo)
@@ -78,9 +81,11 @@ func main() {
 
 }
 
+// 對應的function
 func getTodos(c *fiber.Ctx) error {
 	var todos []Todo
 
+	// 4. 確認是否有todos
 	cursor, err := collection.Find(context.Background(), bson.M{})
 
 	if err != nil {
@@ -97,6 +102,7 @@ func getTodos(c *fiber.Ctx) error {
 		todos = append(todos, todo)
 	}
 
+	// 5. 從後端找到資料後傳給前端
 	return c.JSON(todos)
 }
 
