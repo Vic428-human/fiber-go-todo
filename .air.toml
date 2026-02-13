@@ -1,0 +1,42 @@
+#:schema https://json.schemastore.org/any.json
+# 啟動時：
+# air 讀取設定檔 → 監控專案目錄下的 所有 .go 檔案
+# 當你修改 main.go：
+# Air 檢測到變更 → 執行 go build -o main main.go
+# 將編譯結果存到 tmp/ 目錄
+# 自動重啟執行中的 main 程式
+# 特殊情況處理：
+# 修改 tmp/ 或 client/ 資料夾 → 不會觸發重編譯（因為在 exclude 列表中）
+# 修改 index.html → 不會觸發重編譯（因為 include 只監控 .go 檔案）
+
+# 範例
+# your-project/
+# ├── main.go       # 會被監控（.go 檔案）
+# ├── index.html    # 不會被監控（非 .go 檔案）
+# ├── styles.css    # 不會被監控（非 .go 檔案）
+# └── client/       # 會被 exclude 排除（但裡面的 .go 也不會觸發）
+
+# 專案根目錄（從這裡開始監控檔案變更）
+root = "." 
+
+# 臨時目錄（用來存放編譯產生的中間檔）
+tmp_dir = "tmp" 
+
+# ===== 以下是編譯相關設定 =====
+[build] 
+
+# 產出的執行檔名稱（編譯後會生成 ./main）
+bin = "main" 
+
+# 編譯指令（{{.Output}} 會被替換成 "main"）
+cmd = "go build -o {{.Output}} {{.Input}}" 
+
+# 要「忽略監控」的目錄（這些資料夾的變更不會觸發重編譯）
+exclude = ["tmp/*", "client/*"] 
+
+# 簡單說：include 是「白名單」，沒在清單裡的檔案一律不監控
+# 只監控 .go 檔案 （其他所有類型的檔案 自動被忽略）
+include = ["**/*.go"] 
+
+# 額外排除特定路徑 （用於排除 本該被 include 監控 的 .go 檔案）
+ignore = ["tmp/**"] 
